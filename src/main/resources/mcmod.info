@@ -1,0 +1,21 @@
+{
+	"modListVersion": 2,
+	"modList": [{
+		"modid": "${modId}",
+		"name": "${modName}",
+		"description": "A mod provided some utilities about cross-dimensional storage network.",
+		"version": "${modVersion}",
+		"mcversion": "${minecraftVersion}",
+		"url": "https://github.com/Frostbite-time/BeyondDimensions",
+		"updateUrl": "",
+		"authorList": ["Frostbite"],
+		"credits": "Original mod by Frostbite-time (Beyond Dimensions, MIT License). Ported to 1.7.10 GTNH by zhi-qin.",
+		"logoFile": "",
+		"screenshots": [],
+		"parent": "",
+		"requiredMods": [],
+		"dependencies": [],
+		"dependants": [],
+		"useDependencyInformation": false
+	}]
+}

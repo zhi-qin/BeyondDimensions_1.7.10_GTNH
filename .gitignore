@@ -1,0 +1,47 @@
+# ==================== 构建产物与 Gradle ====================
+.gradle
+/build/
+/out/
+/bin/
+*.class
+/src/test/
+
+# ==================== IDE ====================
+/.idea/
+/.vscode/
+/eclipse/
+.settings
+.classpath
+.project
+*.iml
+*.ipr
+*.iws
+.factorypath
+
+# ==================== Minecraft 开发运行时 ====================
+/run/
+/config/
+/crash-reports/
+/logs/
+/saves/
+options.txt
+usernamecache.json
+banned-ips.json
+banned-players.json
+eula.txt
+ops.json
+server.properties
+servers.dat
+usercache.json
+whitelist.json
+*.log
+
+# ==================== 构建元数据（插件/运行时写入，非项目文件）====================
+build-info.txt
+
+# ==================== Windows/macOS 系统文件 ====================
+*.bat
+!gradlew.bat
+Thumbs.db
+.DS_Store
+Desktop.ini

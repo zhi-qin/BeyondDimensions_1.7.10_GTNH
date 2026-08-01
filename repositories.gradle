@@ -1,0 +1,21 @@
+// Add any additional repositories for your dependencies here.
+
+repositories {
+    // JitPack 用于 tinypinyin 等 GitHub 库
+    maven {
+        name = "JitPack"
+        url = uri("https://jitpack.io")
+        content {
+            includeGroup("com.github.promeg")
+        }
+    }
+
+    // CurseMaven 用于获取 1.7.10 模组依赖
+    maven {
+        name = "CurseMaven"
+        url = uri("https://www.cursemaven.com")
+        content {
+            includeGroup("curse.maven")
+        }
+    }
+}

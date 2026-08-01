@@ -1,0 +1,41 @@
+allprojects {
+    afterEvaluate { p ->
+        def cfg = p.configurations.findByName('runtimeOnlyNonPublishable')
+        if (cfg != null && !cfg.dependencies.any { it.name == 'NotEnoughItems' }) {
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-690-GTNH:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Botania:1.13.28-GTNH:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:GTNHLib:0.11.30:dev')
+            // ForgeMultipart — Mekanism 需要的 multipart 库
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:ForgeMultipart:1.6.8:dev')
+
+            // GT5-Unofficial（GregTech 5）— 测试端运行时注入，验证与 BeyondDimensions 的共存。
+            // FML 硬依赖（GTMod.java @Mod dependencies）：IC2、structurelib、gtnhlib、modularui、appliedenergistics2
+            // （gtnhlib 与 AE2 已在上面注入/满足）。其余按 GT5 官方 dependencies.gradle 的 api()/implementation()
+            // 范围对齐（Postea 在 GT5 preInit 中无 @Optional 直接 import，属硬性运行时需求）。
+            // GT5 本体用 transitive=false，避免拉取其 POM 中声明的一大批可选联动模组（BuildCraft/EnderIO/…）。
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:GT5-Unofficial:5.09.54.67:dev') { transitive = false }
+            p.dependencies.add('runtimeOnlyNonPublishable', 'net.industrial-craft:industrialcraft-2:2.2.828-experimental:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:StructureLib:1.4.42:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:ModularUI:1.3.4:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:ModularUI2:2.3.79-1.7.10:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Postea:1.2.5:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:AE2FluidCraft-Rework:1.5.95-gtnh:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:waila:1.19.30:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Draconic-Evolution:1.5.27-GTNH:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.falsepattern:chunkapi-mc1.7.10:0.8.3:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.falsepattern:endlessids-mc1.7.10:1.7.3:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Baubles-Expanded:2.2.21-GTNH:dev') { transitive = false }
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:TinkersConstruct:1.14.93-GTNH:dev')
+            p.dependencies.add('runtimeOnlyNonPublishable', 'com.github.GTNewHorizons:Hodgepodge:2.7.166:dev')
+
+            // Mekanism 9.1.1 — 本地原版 jar（SRG 命名）经 RFG deobf 反混淆注入运行时。
+            // coremod 已剥离（libs/Mekanism-...-nocoremod.jar），见 PORTING_DEVIATIONS 6.9。
+            // rfg 扩展注册在 DependencyHandler 上，经 p.dependencies.extensions.findByName('rfg') 访问。
+            def rfg = p.dependencies.extensions.findByName('rfg')
+            if (rfg != null) {
+                p.dependencies.add('runtimeOnlyNonPublishable', rfg.deobf(p.files('libs/Mekanism-1.7.10-9.1.1.1031-nocoremod.jar')))
+            }
+        }
+    }
+}

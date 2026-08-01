@@ -1,0 +1,70 @@
+/*
+ * Add your dependencies here. Supported configurations:
+ *  - api("group:name:version:classifier"): if you use the types from this dependency in the public API of this mod
+ *       Available at runtime and compiletime for mods depending on this mod
+ *  - implementation("g:n:v:c"): if you need this for internal implementation details of the mod, but none of it is visible via the public API
+ *       Available at runtime but not compiletime for mods depending on this mod
+ *  - compileOnly("g:n:v:c"): if the mod you're building doesn't need this dependency during runtime at all, e.g. for optional mods
+ *       Not available at all for mods depending on this mod, only visible at compiletime for this mod
+ *  - compileOnlyApi("g:n:v:c"): like compileOnly, but also visible at compiletime for mods depending on this mod
+ *       Available at compiletime but not runtime for mods depending on this mod
+ *  - runtimeOnlyNonPublishable("g:n:v:c"): if you want to include a mod in this mod's runClient/runServer runs, but not publish it as a dependency
+ *       Not available at all for mods depending on this mod, only visible at runtime for this mod
+ *  - devOnlyNonPublishable("g:n:v:c"): a combination of runtimeOnlyNonPublishable and compileOnly for dependencies present at both compiletime and runtime,
+ *       but not published as Maven dependencies - useful for RFG-deobfuscated dependencies or local testing
+ *  - runtimeOnly("g:n:v:c"): if you don't need this at compile time, but want it to be present at runtime
+ *       Available at runtime for mods depending on this mod
+ *  - annotationProcessor("g:n:v:c"): mostly for java compiler plugins, if you know you need this, use it, otherwise don't worry
+ *  - testCONFIG("g:n:v:c") - replace CONFIG by one of the above (except api), same as above but for the test sources instead of main
+ *
+ *  - shadowImplementation("g:n:v:c"): effectively the same as API, but the dependency is included in your jar under a renamed package name
+ *       Requires you to enable usesShadowedDependencies in gradle.properties
+ *
+ *  - compile("g:n:v:c"): deprecated, replace with "api" (works like the old "compile") or "implementation" (can be more efficient)
+ *
+ * You can exclude transitive dependencies (dependencies of the chosen dependency) by appending { transitive = false } if needed,
+ * but use this sparingly as it can break using your mod as another mod's dependency if you're not careful.
+ *
+ * To depend on obfuscated jars you can use `devOnlyNonPublishable(rfg.deobf("dep:spec:1.2.3"))` to fetch an obfuscated jar from maven,
+ * or `devOnlyNonPublishable(rfg.deobf(project.files("libs/my-mod-jar.jar")))` to use a file.
+ *
+ * Gradle names for some of the configuration can be misleading, compileOnlyApi and runtimeOnly both get published as dependencies in Maven, but compileOnly does not.
+ * The buildscript adds runtimeOnlyNonPublishable to also have a runtime dependency that's not published.
+ *
+ * For more details, see https://docs.gradle.org/8.0.1/userguide/java_library_plugin.html#sec:java_library_configurations_graph
+ */
+dependencies {
+    // 拼音库，打包进模组 jar（Maven Central 上的发布版本）
+    shadowImplementation("io.github.biezhi:TinyPinyin:2.0.3.RELEASE")
+
+    // 测试依赖
+    testImplementation("junit:junit:4.13.2")
+    testImplementation("org.mockito:mockito-core:4.11.0")
+
+    // NEI（JEI/EMI 在 1.7.10 的替代）— 配方查看与幽灵物品
+    compileOnly("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
+
+    // AE2 1.7.10 GTNH 版（可选集成：存储元件）
+    // 版本与 GTNH 2.8.0 运行时对齐（rv3-beta-690-GTNH），避免 999 新 API（IAEStackType 等）
+    // 在 690 运行时加载失败（NoClassDefFoundError），见 BUGFIX_RECORD。
+    compileOnly("com.github.GTNewHorizons:Applied-Energistics-2-Unofficial:rv3-beta-690-GTNH:dev")
+
+    // Botania 1.7.10（可选集成：Mana 系统）
+    compileOnly("com.github.GTNewHorizons:Botania:1.13.28-GTNH:dev")
+
+    // GT5-Unofficial（GregTech 5）— 可选集成：GT 放电模式（GtNetEnergyPathwayBlockEntity）。
+    // 仅编译期引用 GT API（IEnergyConnected/IBasicEnergyContainer/MTECable），运行时由
+    // init-runtime.gradle 注入 GT5；发布 jar 不依赖 GT，GT 缺席时反射注册回退基础链，
+    // 不会触发 NoClassDefFoundError。GT 变体 extends RF 变体（非 Mek），见 PORTING_DEVIATIONS。
+    compileOnly("com.github.GTNewHorizons:GT5-Unofficial:5.09.54.67:dev") { transitive = false }
+
+    // Mekanism 1.7.10 — 编译期使用项目内 src/main/java/mekanism/api/gas 存根做类型解析。
+    // 注意：这些存根是 compileOnly，addon.gradle.kts 已对所有 Jar 任务 exclude("mekanism/**")，
+    //       绝不可打进发布 jar，否则运行时会遮蔽真 Mekanism 的 API 类致其崩溃（见 BUGFIX_RECORD #33）。
+    // 运行时 dev 测试：原版 CurseForge jar 是 SRG 命名，与 MCP dev 环境不兼容；已在 init-runtime.gradle
+    //       中用 rfg.deobf 反混淆 + 剥离 coremod 后的 libs/Mekanism-1.7.10-9.1.1.1031-nocoremod.jar
+    //       以 runtimeOnlyNonPublishable 注入（详见 PORTING_DEVIATIONS 6.9）。此处无需声明 Mekanism 依赖。
+
+    // 运行时测试用（仅 dev 环境，不发布）
+    // runtimeOnlyNonPublishable("com.github.GTNewHorizons:NotEnoughItems:2.7.69-GTNH:dev")
+}
