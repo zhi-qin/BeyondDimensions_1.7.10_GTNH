@@ -59,8 +59,17 @@ src/main/java/com/wintercogs/beyonddimensions/
 - **1.7.10 GTNH 移植：** zhi-qin
 - **构建基建：** 基于 [GTNH ExampleMod](https://github.com/GTNewHorizons/ExampleMod1.7.10) 模板（MIT License，Copyright (c) 2021 Johann Bernhardt）
 
+
+
+
 ## 许可
 
 见 [LICENSE](LICENSE)（MIT License）。
 
 第三方组件声明（含打包进 jar 的 TinyPinyin，Apache-2.0）见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。
+
+
+
+## 💬 补充说明
+
+本模组仅为个人学习与 GTNH 整合包自用而
